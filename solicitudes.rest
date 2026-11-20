@@ -33,7 +33,7 @@ content-type: application/json
 {
   "numeroOrden": "20261119-0001",
   "nombreRetira": "Mario Pepe",
-  "correo": "roman@duocuc.cl",
+  "correo": "mario@duocuc.cl",
   "sucursal": "Mil Sabores La Florida",
   "fecha": "2026-11-25",
   "hora": "15:30",
@@ -46,7 +46,7 @@ content-type: application/json
 
 {
   "nombreRetira": "Mario Pepe",
-  "correo": "roman@duocuc.cl",
+  "correo": "mario@duocuc.cl",
   "sucursal": "Mil Sabores La Florida",
   "fecha": "2026-11-25",
   "hora": "16:00",

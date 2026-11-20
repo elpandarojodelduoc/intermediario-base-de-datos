@@ -1,0 +1,99 @@
+### obtener todas las categorias
+GET http://localhost:8080/categoria HTTP/1.1
+content-type: application/json
+
+### obtener todos los productos
+GET http://localhost:8080/producto HTTP/1.1
+content-type: application/json
+
+### agregar un producto (categoria se indica por su id)
+POST http://localhost:8080/producto HTTP/1.1
+content-type: application/json
+
+{
+  "nombre": "Cupcake Red Velvet",
+  "descripcion": "Cupcake de Red Velvet con crema por dentro.",
+  "precio": 2190,
+  "imagen": "/img/cupcake.png",
+  "stock": 20,
+  "stockCritico": 5,
+  "oferta": 0,
+  "destacado": false,
+  "categoria": { "idCategoria": 3 }
+}
+
+### obtener todos los retiros en tienda
+GET http://localhost:8080/retiro-tienda HTTP/1.1
+content-type: application/json
+
+### agregar un retiro en tienda
+POST http://localhost:8080/retiro-tienda HTTP/1.1
+content-type: application/json
+
+{
+  "numeroOrden": "20261119-0001",
+  "nombreRetira": "Roman Julian",
+  "correo": "roman@duocuc.cl",
+  "sucursal": "Mil Sabores La Florida",
+  "fecha": "2026-11-25",
+  "hora": "15:30",
+  "estado": "pendiente"
+}
+
+### actualizar un retiro en tienda
+PUT http://localhost:8080/retiro-tienda/1 HTTP/1.1
+content-type: application/json
+
+{
+  "nombreRetira": "Camila Rojas Soto",
+  "correo": "camila@duocuc.cl",
+  "sucursal": "Mil Sabores La Florida",
+  "fecha": "2026-11-25",
+  "hora": "16:00",
+  "estado": "listo"
+}
+
+### eliminar un retiro en tienda
+DELETE http://localhost:8080/retiro-tienda/1 HTTP/1.1
+
+### obtener todos los delivery
+GET http://localhost:8080/delivery HTTP/1.1
+content-type: application/json
+
+### agregar un delivery
+POST http://localhost:8080/delivery HTTP/1.1
+content-type: application/json
+
+{
+  "numeroOrden": "20261119-0002",
+  "nombreDestinatario": "Don Nicolas",
+  "telefono": "+56 9 4444 5555",
+  "calle": "Av La Florida",
+  "departamento": "501",
+  "region": "Región Metropolitana de Santiago",
+  "comuna": "La Florida",
+  "indicaciones": "Tocar el timbre",
+  "fecha": "2026-11-26",
+  "estado": "pendiente"
+}
+
+### actualizar un delivery
+PUT http://localhost:8080/delivery/1 HTTP/1.1
+content-type: application/json
+
+{
+  "nombreDestinatario": "Don Renato",
+  "telefono": "+56 9 6666 7777",
+  "calle": "Av. Providencia 1234",
+  "departamento": "502",
+  "region": "Región Metropolitana de Santiago",
+  "comuna": "San Joaquin",
+  "fecha": "2026-11-26",
+  "estado": "en_camino"
+}
+
+### eliminar un delivery
+DELETE http://localhost:8080/delivery/1 HTTP/1.1
+
+### estado de la API
+GET http://localhost:8080/actuator/health HTTP/1.1

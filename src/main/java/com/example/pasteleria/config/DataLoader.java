@@ -1,18 +1,21 @@
 package com.example.pasteleria.config;
 
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.pasteleria.models.entities.Categoria;
 import com.example.pasteleria.models.entities.Producto;
+import com.example.pasteleria.models.entities.Rol;
+import com.example.pasteleria.models.entities.Usuario;
 import com.example.pasteleria.repositories.CategoriaRepository;
 import com.example.pasteleria.repositories.ProductoRepository;
+import com.example.pasteleria.repositories.UsuarioRepository;
 
-/**
- * Carga las categorias y productos de Pasteleria Mil Sabores la primera vez
- * que arranca la API (solo si las tablas estan vacias).
- */
 @Configuration
 public class DataLoader {
 
@@ -51,6 +54,38 @@ public class DataLoader {
             productoRepo.save(producto("Torta Especial de Cumpleaños", "Torta personalizable con mensaje y decoración a elección.", 55000, "/img/torta-cumpleanos.webp", 7, 3, 0, true, c[8]));
             productoRepo.save(producto("Torta Especial de Boda", "Torta de varios pisos con decoración floral para tu gran día.", 60000, "/img/torta-boda.jpeg", 2, 2, 0, false, c[8]));
         };
+    }
+
+    @Bean
+    CommandLineRunner cargarUsuariosIniciales(UsuarioRepository usuarioRepo, PasswordEncoder encoder,
+            @Value("${app.seed.admin-password:admin123}") String claveAdmin) {
+        return args -> {
+            if (usuarioRepo.count() > 0) {
+                return;
+            }
+            usuarioRepo.save(usuario("Administrador", "Mil Sabores", "admin@milsabores.cl", encoder.encode(claveAdmin),
+                    Rol.ADMIN, LocalDate.of(1980, 5, 10), "+56 9 1111 2222", 0, false));
+            usuarioRepo.save(usuario("Camila", "Rojas Soto", "camila@duocuc.cl", encoder.encode("camila123"),
+                    Rol.CLIENTE, LocalDate.of(2002, 8, 21), "+56 9 3333 4444", 0, true));
+            usuarioRepo.save(usuario("Don Hernán", "Pérez Lagos", "hernan@correo.cl", encoder.encode("hernan123"),
+                    Rol.CLIENTE, LocalDate.of(1958, 3, 2), "+56 9 5555 6666", 50, false));
+        };
+    }
+
+    private static Usuario usuario(String nombre, String apellidos, String correo, String claveHash, Rol rol,
+            LocalDate nacimiento, String telefono, int descuento, boolean tortaCumple) {
+        Usuario u = new Usuario();
+        u.setNombre(nombre);
+        u.setApellidos(apellidos);
+        u.setCorreo(correo);
+        u.setClave(claveHash);
+        u.setRol(rol);
+        u.setNacimiento(nacimiento);
+        u.setTelefono(telefono);
+        u.setDescuento(descuento);
+        u.setTortaCumple(tortaCumple);
+        u.setActivo(true);
+        return u;
     }
 
     private static Categoria categoria(String nombre, String descripcion, String imagen) {

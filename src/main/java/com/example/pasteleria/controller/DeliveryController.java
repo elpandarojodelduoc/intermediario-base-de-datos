@@ -17,20 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pasteleria.models.entities.Delivery;
 import com.example.pasteleria.services.DeliveryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name = "Delivery", description = "Datos de despacho (los crea el cliente al comprar, los administra el ADMIN)")
 @RequestMapping("/delivery")
 public class DeliveryController {
 
     @Autowired
     private DeliveryService deliveryService;
 
+    @Operation(summary = "Listar deliveries")
     @GetMapping("")
     public List<Delivery> obtenerDeliveries() {
         return deliveryService.obtenerDeliveries();
     }
 
+    @Operation(summary = "Buscar delivery por id")
     @GetMapping("/{id}")
     public ResponseEntity<Delivery> buscarDelivery(@PathVariable Integer id) {
         return deliveryService.buscarDelivery(id)
@@ -38,11 +43,13 @@ public class DeliveryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Crear delivery")
     @PostMapping("")
     public ResponseEntity<Delivery> agregarDelivery(@Valid @RequestBody Delivery delivery) {
         return ResponseEntity.status(HttpStatus.CREATED).body(deliveryService.guardarDelivery(delivery));
     }
 
+    @Operation(summary = "Actualizar delivery")
     @PutMapping("/{id}")
     public ResponseEntity<Delivery> actualizarDelivery(@PathVariable Integer id, @Valid @RequestBody Delivery delivery) {
         return deliveryService.actualizarDelivery(id, delivery)
@@ -50,6 +57,7 @@ public class DeliveryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Eliminar delivery")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarDelivery(@PathVariable Integer id) {
         return deliveryService.eliminarDelivery(id)

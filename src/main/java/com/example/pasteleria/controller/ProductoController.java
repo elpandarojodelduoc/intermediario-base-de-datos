@@ -17,20 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pasteleria.models.entities.Producto;
 import com.example.pasteleria.services.ProductoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name = "Productos", description = "Catálogo de productos (lectura pública, escritura solo ADMIN)")
 @RequestMapping("/producto")
 public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
 
+    @Operation(summary = "Listar productos")
     @GetMapping("")
     public List<Producto> obtenerProductos() {
         return productoService.obtenerProductos();
     }
 
+    @Operation(summary = "Buscar producto por id")
     @GetMapping("/{id}")
     public ResponseEntity<Producto> buscarProducto(@PathVariable Integer id) {
         return productoService.buscarProducto(id)
@@ -38,11 +43,13 @@ public class ProductoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Crear producto")
     @PostMapping("")
     public ResponseEntity<Producto> agregarProducto(@Valid @RequestBody Producto producto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productoService.guardarProducto(producto));
     }
 
+    @Operation(summary = "Actualizar producto")
     @PutMapping("/{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Integer id, @Valid @RequestBody Producto producto) {
         return productoService.actualizarProducto(id, producto)
@@ -50,6 +57,7 @@ public class ProductoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Eliminar producto")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Integer id) {
         return productoService.eliminarProducto(id)

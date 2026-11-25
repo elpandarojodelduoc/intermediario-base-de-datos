@@ -5,7 +5,6 @@ import java.time.Period;
 
 import org.springframework.stereotype.Service;
 
-/** Reglas de beneficios del cliente (misma logica que tenia el frontend en beneficios.js). */
 @Service
 public class BeneficioService {
     public static final String CODIGO_PROMOCIONAL = "FELICES50";
@@ -14,7 +13,6 @@ public class BeneficioService {
     public record Beneficios(int descuento, boolean tortaCumple) {
     }
 
-    /** 50% si tiene 50 anios o mas; 10% con el codigo promocional; torta gratis de cumple con correo Duoc. */
     public Beneficios calcular(LocalDate nacimiento, String codigo, String correo) {
         int descuento = 0;
         if (nacimiento != null && Period.between(nacimiento, LocalDate.now()).getYears() >= 50) {

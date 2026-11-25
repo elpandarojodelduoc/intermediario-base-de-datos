@@ -40,13 +40,11 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest req) {
         try {
-            // Spring Security compara la clave con el hash BCrypt guardado en la BD
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.correo().trim(), req.clave()));
         } catch (DisabledException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tu cuenta está desactivada.");
         } catch (AuthenticationException e) {
-            // Mensaje generico: no revela si el correo existe o no
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Correo o contraseña incorrectos.");
         }
         Usuario usuario = usuarioRepo.findByCorreoIgnoreCase(req.correo().trim())
@@ -64,7 +62,7 @@ public class AuthService {
         u.setApellidos(req.apellidos().trim());
         u.setCorreo(req.correo().trim());
         u.setClave(passwordEncoder.encode(req.clave()));
-        u.setRol(Rol.CLIENTE); // el registro publico siempre crea clientes, nunca admins
+        u.setRol(Rol.CLIENTE); 
         u.setNacimiento(req.nacimiento());
         u.setTelefono(req.telefono() == null ? "" : req.telefono().trim());
         u.setDescuento(beneficios.descuento());
@@ -73,7 +71,6 @@ public class AuthService {
         return emitir(usuarioRepo.save(u));
     }
 
-    /** Renovacion: cambia un refresh token valido por un nuevo par de tokens. */
     public AuthResponse renovar(String refreshToken) {
         try {
             Claims claims = jwtService.leer(refreshToken);

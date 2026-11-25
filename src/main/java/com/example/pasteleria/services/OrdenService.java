@@ -22,10 +22,6 @@ import com.example.pasteleria.repositories.OrdenRepository;
 import com.example.pasteleria.repositories.ProductoRepository;
 import com.example.pasteleria.repositories.UsuarioRepository;
 
-/**
- * Logica de negocio de la compra: el servidor calcula precios con oferta, descuento del
- * cliente y total, valida el stock y lo descuenta solo si el pago se aprueba.
- */
 @Service
 public class OrdenService {
     private final OrdenRepository ordenRepo;
@@ -47,7 +43,6 @@ public class OrdenService {
         Usuario usuario = usuarioRepo.findByCorreoIgnoreCase(correo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no encontrado"));
 
-        // Une lineas repetidas del mismo producto
         Map<Integer, Integer> cantidades = new LinkedHashMap<>();
         for (ItemOrdenRequest item : req.items()) {
             cantidades.merge(item.productoId(), item.cantidad(), Integer::sum);
@@ -85,7 +80,7 @@ public class OrdenService {
         orden.setDescuento(descuento);
         orden.setTotal(subtotal - descuento);
 
-        boolean rechazado = Boolean.TRUE.equals(req.forzarRechazo()); // simulacion de pago fallido
+        boolean rechazado = Boolean.TRUE.equals(req.forzarRechazo()); 
         orden.setEstado(rechazado ? Orden.FALLIDA : Orden.PAGADA);
 
         orden = ordenRepo.save(orden);
@@ -129,7 +124,6 @@ public class OrdenService {
         return OrdenResponse.de(obtenerAutorizada(id, correo, esAdmin));
     }
 
-    /** Un cliente solo puede ver sus propias ordenes; el admin puede ver todas. */
     private Orden obtenerAutorizada(Integer id, String correo, boolean esAdmin) {
         Orden orden = ordenRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Orden no encontrada"));
